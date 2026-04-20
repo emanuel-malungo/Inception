@@ -1,15 +1,12 @@
 FROM debian:bookworm
 
-RUN apt-get update && apt-get install -y \
-    nginx openssl \
+RUN apt-get update && apt-get install -y nginx openssl gettext-base \
     && rm -rf /var/lib/apt/lists/*
 
-COPY conf/nginx.conf /etc/nginx/sites-available/default
+COPY conf/nginx.conf.template /etc/nginx/templates/nginx.conf.template
 COPY tools/run.sh /usr/local/bin/run.sh
 RUN chmod +x /usr/local/bin/run.sh
 
-RUN mkdir -p /etc/nginx/ssl
+EXPOSE 443
 
-EXPOSE 80 443
-
-CMD ["/usr/local/bin/run.sh"]
+ENTRYPOINT ["/usr/local/bin/run.sh"]
