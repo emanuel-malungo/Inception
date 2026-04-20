@@ -41,6 +41,8 @@ services:
       - db_password
       - wp_admin_password
       - wp_editor_password
+    volumes:
+      - wordpress_data:/var/www/html
         
 volumes:
   mariadb_data:
@@ -49,6 +51,13 @@ volumes:
       type: none
       o: bind
       device: /home/emalungo/data/mariadb
+
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/emalungo/data/wordpress
   
 networks:
   inception_network:
