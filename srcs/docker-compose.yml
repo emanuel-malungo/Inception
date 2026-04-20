@@ -43,6 +43,20 @@ services:
       - wp_editor_password
     volumes:
       - wordpress_data:/var/www/html
+
+  nginx:
+    build: ./requirements/nginx/
+    image: nginx:inception
+    container_name: nginx
+    restart: 
+      unless-stopped
+    networks:
+      - inception_network
+    depends_on:
+      - wordpress
+    ports:
+      - "80:80"
+      - "443:443"
         
 volumes:
   mariadb_data:
