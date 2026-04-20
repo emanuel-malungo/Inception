@@ -1,13 +1,3 @@
-secrets:
-  db_password:
-    file: ../secrets/db_password.txt
-  db_root_password:
-    file: ../secrets/db_root_password.txt
-  wp_admin_password:
-    file: ../secrets/wp_admin_password.txt
-  wp_editor_password:
-    file: ../secrets/wp_editor_password.txt
-
 services:
   mariadb:
     build: ./requirements/mariadb/
@@ -76,3 +66,13 @@ volumes:
 networks:
   inception_network:
     driver: bridge
+
+secrets:
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  wp_editor_password:
+    file: ../secrets/wp_editor_password.txt
