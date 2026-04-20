@@ -1,0 +1,33 @@
+services:
+  mariadb:
+    image: ./resources/mariadb
+    container_name: mariadb
+    restart: 
+      unless-stopped
+    networks:
+      - inception_network
+    env_file:
+      - ./.env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - secrets:/run/secrets
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/emalungo/data/mysql
+
+  secrets:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ../secrets
+
+  
+networks:
+  inception_network:
+    driver: bridge
