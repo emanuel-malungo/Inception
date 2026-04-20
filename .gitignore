@@ -10,11 +10,6 @@
 secrets/*
 !secrets/.gitkeep
 
-# --- Dados do WordPress e Banco de Dados ---
-data/
-**/wordpress/*
-**/mariadb/*
-
 # --- Sistema e IDEs ---
 .DS_Store
 .vscode/
