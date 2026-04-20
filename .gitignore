@@ -16,6 +16,7 @@ secrets/*
 .idea/
 *.swp
 *.swo
+*.txt
 
 # --- Logs ---
 *.log

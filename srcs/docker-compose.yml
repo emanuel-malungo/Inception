@@ -1,6 +1,7 @@
 services:
   mariadb:
-    image: ./resources/mariadb
+    build: ./requirements/mariadb/
+    image: mariadb:inception
     container_name: mariadb
     restart: 
       unless-stopped
@@ -18,7 +19,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/emalungo/data/mysql
+      device: /home/emalungo/data/mariadb
 
   secrets:
     driver: local
