@@ -41,4 +41,5 @@ if [ ! -f wp-config.php ]; then
         --allow-root
 fi
 
+echo "✅ WordPress pronto!"
 exec php-fpm8.2 -F
