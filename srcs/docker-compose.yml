@@ -1,3 +1,13 @@
+secrets:
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
+  wp_editor_password:
+    file: ../secrets/wp_editor_password.txt
+
 services:
   mariadb:
     build: ./requirements/mariadb/
@@ -11,8 +21,27 @@ services:
       - ./.env
     volumes:
       - mariadb_data:/var/lib/mysql
-      - secrets:/run/secrets
+    secrets:
+      - db_password
+      - db_root_password
 
+  wordpress:
+    build: ./requirements/wordpress/
+    image: wordpress:inception
+    container_name: wordpress
+    restart: 
+      unless-stopped
+    networks:
+      - inception_network
+    env_file:
+      - ./.env
+    depends_on:
+      - mariadb
+    secrets:
+      - db_password
+      - wp_admin_password
+      - wp_editor_password
+        
 volumes:
   mariadb_data:
     driver: local
@@ -20,14 +49,6 @@ volumes:
       type: none
       o: bind
       device: /home/emalungo/data/mariadb
-
-  secrets:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ../secrets
-
   
 networks:
   inception_network:
