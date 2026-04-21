@@ -1,7 +1,12 @@
 #!/bin/bash
 
+set -e
+
 MYSQL_USER="${MYSQL_USER}"
 MYSQL_DATABASE="${MYSQL_DATABASE}"
+
+mkdir -p /run/mysqld
+chown -R mysql:mysql /run/mysqld
 
 if [ -f "/run/secrets/db_root_password.txt" ]; then
     DB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password.txt)
@@ -15,9 +20,14 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
     mariadb-install-db --user=mysql --datadir=/var/lib/mysql
 fi
 
-mysqld_safe --datadir=/var/lib/mysql --skip-grant-tables --skip-networking &
+# Inicialização temporária: sem rede, sem grant tables, em background
+mysqld --user=mysql --skip-networking --skip-grant-tables &
+MYSQL_PID=$!
 
-sleep 5
+# Aguarda o socket ficar disponível (sem sleep fixo)
+until mysqladmin ping --silent 2>/dev/null; do
+    sleep 1
+done
 
 mysql -u root <<EOF
     FLUSH PRIVILEGES;
@@ -32,7 +42,11 @@ mysql -u root <<EOF
     FLUSH PRIVILEGES;
 EOF
 
-mysqladmin -u root -p"${DB_ROOT_PASSWORD}" shutdown
+# Encerra o mysqld temporário de forma limpa e aguarda
+kill $MYSQL_PID
+wait $MYSQL_PID
 
 echo "✅ MariaDB pronto!"
-exec mysqld_safe --datadir=/var/lib/mysql
+
+# mysqld vira PID 1 com exec — sem wrapper, sem background
+exec mysqld --user=mysql --datadir=/var/lib/mysql
