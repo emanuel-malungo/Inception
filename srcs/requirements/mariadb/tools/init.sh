@@ -8,12 +8,12 @@ MYSQL_DATABASE="${MYSQL_DATABASE}"
 mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld
 
-if [ -f "/run/secrets/db_root_password.txt" ]; then
-    DB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password.txt)
+if [ -f "/run/secrets/db_root_password" ]; then
+    DB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
 fi
 
-if [ -f "/run/secrets/db_password.txt" ]; then
-    DB_PASSWORD=$(cat /run/secrets/db_password.txt)
+if [ -f "/run/secrets/db_password" ]; then
+    DB_PASSWORD=$(cat /run/secrets/db_password)
 fi
 
 if [ ! -d "/var/lib/mysql/mysql" ]; then
@@ -47,6 +47,5 @@ kill $MYSQL_PID
 wait $MYSQL_PID
 
 echo "✅ MariaDB pronto!"
-
 # mysqld vira PID 1 com exec — sem wrapper, sem background
 exec mysqld --user=mysql --datadir=/var/lib/mysql
